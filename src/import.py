@@ -30,7 +30,7 @@ def import_csv_to_mongodb(csv_file_path, mongo_uri, collection_name):
 
     Args:
         csv_file_path (str): The path to the CSV file.
-        mongo_uri (str): The MongoDB connection URI (e.g., "mongodb+srv://user:pass@cluster0.13vgs.mongodb.net/dbname?retryWrites=true&w=majority").
+        mongo_uri (str): The MongoDB connection URI (e.g., "mongodb+srv://user:pass@host/dbname").
         collection_name (str): The name of the MongoDB collection.
     """
     ranks_data = []
