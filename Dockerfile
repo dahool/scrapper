@@ -84,14 +84,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set the working directory in the container
 WORKDIR /app
 
+# Copy the Python script into the container's working directory
+COPY src/* .
+
 # Install Python dependencies
 # Using pip without cache to keep the image smaller
-RUN pip install --no-cache-dir selenium beautifulsoup4
-
-# Copy the Python script into the container's working directory
-COPY scrap.py .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Define the command to run the Python script when the container starts
 # This executes: python scraper.py
-CMD ["python", "scrap.py"]
+CMD ["runner.sh"]
 
