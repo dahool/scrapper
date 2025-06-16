@@ -93,5 +93,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Define the command to run the Python script when the container starts
 # This executes: python scraper.py
-CMD ["runner.sh"]
+ENTRYPOINT ["bash", "runner.sh"]
 
