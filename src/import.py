@@ -62,22 +62,18 @@ def import_csv_to_mongodb(csv_file_path, mongo_uri, collection_name):
                 except KeyError as ke:
                     print(f"Skipping row due to missing column: {ke} in row {row}")
     except FileNotFoundError:
-        print(f"Error: CSV file not found at '{csv_file_path}'")
-        return
+        raise FileNotFoundError(f"Error: CSV file not found at '{csv_file_path}'")
     except Exception as e:
-        print(f"An error occurred while reading the CSV file: {e}")
-        return
+        raise RuntimeError(f"An error occurred while reading the CSV file: {e}")
 
     if not ranks_data:
-        print("No valid data found in the CSV file to import.")
-        return
+        raise ValueError("No valid data found in the CSV file to import.")
 
     # Determine the database name
     db_name = get_db_name_from_uri(mongo_uri)
     if not db_name:
         print("Error: No database name provided in the MongoDB URI.")
-        print("Please ensure your URI includes a database name (e.g., /dbname).")
-        return
+        raise ValueError("Please ensure your URI includes a database name (e.g., /dbname).")
 
     # Get current date
     current_date = datetime.combine(datetime.now(timezone.utc), time(0,0), timezone.utc)
@@ -116,11 +112,11 @@ def import_csv_to_mongodb(csv_file_path, mongo_uri, collection_name):
             print("No document was upserted. Error?.")
 
     except ConnectionFailure as e:
-        print(f"MongoDB connection failed: {e}. Please ensure MongoDB is running and accessible.")
+        raise RuntimeError(f"MongoDB connection failed: {e}. Please ensure MongoDB is running and accessible.")
     except OperationFailure as e:
-        print(f"MongoDB operation failed: {e}. Check database/collection permissions or name.")
+        raise RuntimeError(f"MongoDB operation failed: {e}. Check database/collection permissions or name.")
     except Exception as e:
-        print(f"An unexpected error occurred during MongoDB operation: {e}")
+        raise RuntimeError(f"An unexpected error occurred during MongoDB operation: {e}")
     finally:
         if client: # Check if client was successfully initialized
             client.close()

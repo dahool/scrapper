@@ -1,0 +1,16 @@
+
+services:
+
+  scrapper:
+    build: .
+    image: dahool/stfcscrapper
+    volumes:
+      - scrap-data:/output
+    environment:
+      OUTPUT: /output/output.csv
+      SCRAP_URL: https://stfc.pro/alliances/2734005703/
+    command: 'scrap'
+
+
+volumes:
+  scrap-data:
