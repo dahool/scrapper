@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image (choose a specific version)
-FROM python:3.9-slim
+FROM python:3.9.25-slim-bookworm
 
 # Set environment variables to prevent interactive prompts during installation
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libgbm1 \
     libgcc1 \
     libgconf-2-4 \
-    libgdk-pixbuf2.0-0 \
+    libgdk-pixbuf-xlib-2.0-0 \
     libglib2.0-0 \
     libgtk-3-0 \
     libnspr4 \
@@ -51,9 +51,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxtst6 \
     lsb-release \
     wget \
-    xdg-utils \
-    # Install Google Chrome Stable
-    && echo "Downloading Google Chrome..." \
+    xdg-utils
+## Install Google Chrome Stable    
+RUN echo "Downloading Google Chrome..." \
     && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     && echo "Installing Google Chrome..." \
     && apt-get install -y ./google-chrome-stable_current_amd64.deb \
@@ -75,9 +75,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && mv /usr/local/bin/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver \
     && rm chromedriver-linux64.zip \
     && rm -rf /usr/local/bin/chromedriver-linux64 \
-    && chmod +x /usr/local/bin/chromedriver \
-    # --- Cleanup ---
-    && echo "Cleaning up apt cache..." \
+    && chmod +x /usr/local/bin/chromedriver
+# --- Cleanup ---
+RUN echo "Cleaning up apt cache..." \
     #&& apt-get purge -y --auto-remove wget unzip \
     && rm -rf /var/lib/apt/lists/*
 

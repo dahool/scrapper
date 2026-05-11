@@ -23,6 +23,18 @@ def get_db_name_from_uri(mongo_uri):
         print(f"Warning: Could not parse database name from URI: {e}")
         return None
 
+def parse_score(value: str) -> int:
+    """
+    Convierte strings de score a entero.
+    Soporta: 750 | 12.25K | 1.25M | 2.25T
+    """
+    suffixes = {"K": 1_000, "M": 1_000_000, "B": 1_000_000_000, "T": 1_000_000_000_000}
+    value = value.strip().replace(",", "")
+    suffix = value[-1].upper()
+    if suffix in suffixes:
+        return int(float(value[:-1]) * suffixes[suffix])
+    return int(float(value))
+
 def import_csv_to_mongodb(csv_file_path, mongo_uri, collection_name):
     """
     Reads data from a CSV file, formats it, and pushes it to a MongoDB collection.
@@ -41,7 +53,7 @@ def import_csv_to_mongodb(csv_file_path, mongo_uri, collection_name):
                 try:
                     ranks_data.append({
                         "name": row["Name"],
-                        "score": int(row["Score"].replace(",", "")),  # Convert score to int
+                        "score": parse_score(row["Score"]),  # ← reemplazada
                         "tasks": row["Tasks"],
                         "position": int(row["Position"])
                     })
